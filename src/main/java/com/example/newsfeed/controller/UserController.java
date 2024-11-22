@@ -31,12 +31,21 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody LoginRequestDto loginRequestDto, HttpServletRequest request) {
+    public ResponseEntity<String> loginUser(@Valid @RequestBody LoginRequestDto loginRequestDto, HttpServletRequest request) {
         User loginedUser = userService.loginUser(loginRequestDto);
         HttpSession session = request.getSession();
         session.setAttribute("SESSION_KEY", loginedUser.getUserId());
 
         return ResponseEntity.ok().body("정상적으로 로그인되었습니다.");
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate(); // 세션 무효화
+        }
+        return ResponseEntity.ok("로그아웃 성공");
     }
 
 }
