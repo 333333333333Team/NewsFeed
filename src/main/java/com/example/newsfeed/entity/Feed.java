@@ -13,7 +13,7 @@ import java.math.BigInteger;
 public class Feed extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private Long id;
     private String email;
     private String nickname;
     private String phone;

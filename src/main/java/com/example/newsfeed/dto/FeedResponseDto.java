@@ -21,7 +21,7 @@ public class FeedResponseDto {
 
 
     public static FeedResponseDto toDto(Feed feed){
-        return new FeedResponseDto(feed.getUserId(), feed.getContent(), feed.getNickname(), feed.getEmail());
+        return new FeedResponseDto(feed.getId(), feed.getContent(), feed.getNickname(), feed.getEmail());
     }
 
 
