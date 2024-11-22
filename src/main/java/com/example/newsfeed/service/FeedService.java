@@ -37,6 +37,7 @@ public class FeedService {
     public PagedFeedResponseDto getAllFeedsPaginated(int page,int size){
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createDate").descending());
         Page<Feed> feedPage = feedRepository.findAll(pageRequest);
+
         List<FeedResponseDto>content = feedPage.getContent()
                 .stream()
                 .map(FeedResponseDto::toDto)

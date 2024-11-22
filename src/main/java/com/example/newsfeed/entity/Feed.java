@@ -31,7 +31,7 @@ public class Feed extends BaseEntity {
     public Feed(String email, String nickname,String phone, String content){
 
         this.content = content;
-        this.email =email;
+        this.email = email;
         this.nickname = nickname;
         this.phone = phone;
     }
