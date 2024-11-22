@@ -1,9 +1,11 @@
 package com.example.newsfeed.service;
 
 
+import com.example.newsfeed.dto.FeedRequestDto;
 import com.example.newsfeed.dto.FeedResponseDto;
 import com.example.newsfeed.entity.Feed;
 import com.example.newsfeed.repository.Feedrepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,15 +17,6 @@ public class FeedService {
     //private final MemberRepository memberRepository;
     private final Feedrepository feedRepository;
 
-    public FeedResponseDto enroll(String content){
-
-       // Member findMember = memberRepository.findMemberByUsernameOrElseThrow(username);
-        Feed feed = new feed(content);
-      //  feed.setMember(findMember);
-        feedRepository.save(feed);
-
-        return new  FeedResponseDto(feed.getId(), feed.getContent(), );
-    }
 
     public List<FeedResponseDto> allFeeds(){
         return feedRepository.findAll()
@@ -38,7 +31,28 @@ public class FeedService {
     }
 
     private Feed findFeedById(Long id){
-        return feedRepository.
+        return feedRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("잘못된 ID 값입니다."));
     }
+
+    public  void deleteFeed(Long id){
+        findFeedById(id);
+        feedRepository.deleteById(id);
+    }
+
+    @Transactional
+    public FeedResponseDto createFeed(FeedRequestDto feedRequestDto){
+        Feed feed = new Feed(feedRequestDto.getNickname(),feedRequestDto.getContent(),feedRequestDto.getPhone(),feedRequestDto.getEmail());
+        Feed saveFeed = feedRepository.save(feed);
+        return FeedResponseDto.toDto(saveFeed);
+    }
+
+
+    @Transactional
+    public FeedResponseDto updataFeed(Long id, FeedRequestDto feedRequestDto){
+        Feed feed = findFeedById(id);
+        feed.update(feedRequestDto.getContent());
+        return FeedResponseDto.toDto(feed);
+    }
+
 
 }
