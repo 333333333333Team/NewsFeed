@@ -8,14 +8,14 @@ public class FeedRequestDto {
     private final String email;
     private final String nickname;
     private final String content;
-    private final String phone;
 
-    public FeedRequestDto(String email, String nickname, String content, String phone){
+
+    public FeedRequestDto(String email, String content, String nickname){
 
         this.email =email;
-        this.nickname =nickname;
         this.content = content;
-        this.phone = phone;
+        this.nickname =nickname;
+
     }
 
 }

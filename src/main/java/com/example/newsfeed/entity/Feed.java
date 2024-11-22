@@ -28,12 +28,12 @@ public class Feed extends BaseEntity {
 
     public Feed(){}
 
-    public Feed(String email, String nickname,String phone, String content){
+    public Feed(String email,String content, String nickname ){
 
         this.content = content;
         this.email = email;
         this.nickname = nickname;
-        this.phone = phone;
+
     }
 
 //  public void setMember(Member member){

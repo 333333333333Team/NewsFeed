@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 
 
 @RestController
@@ -24,11 +25,20 @@ public class FeedController {
         return ResponseEntity.ok().body(pagedFeedResponseDto);
     }
 
+
     //단건 조회
     @GetMapping("/feeds/{id}")
     public ResponseEntity<FeedResponseDto> findOne(@PathVariable Long id) {
         return ResponseEntity.ok().body(feedService.findById(id));
     }
+
+    //Email 조회
+    @GetMapping("/feeds/email/{email}")
+    public ResponseEntity<List<FeedResponseDto>> getFeedsByEmail(@PathVariable String email) {
+        List<FeedResponseDto> feeds = feedService.getFeedsByEmail(email);
+        return ResponseEntity.ok(feeds);
+    }
+
 
     //피드 삭제
 
