@@ -12,8 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Objects;
-
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -54,7 +52,7 @@ public class UserService {
     //로그인
     public User loginUser(LoginRequestDto loginRequestDto) {
         User user = userRepository.findByEmail(loginRequestDto.getEmail());
-        if (user == null || !Objects.equals(user.getPassword(), loginRequestDto.getPassword())) {
+        if (user == null || !passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 사용자 이름 혹은 잘못된 비밀번호");
         }
         return user;
