@@ -33,7 +33,7 @@ public class Feed extends BaseEntity {
         this.content = content;
         this.email =email;
         this.nickname = nickname;
-        this.phone = nickname;
+        this.phone = phone;
     }
 
 //  public void setMember(Member member){

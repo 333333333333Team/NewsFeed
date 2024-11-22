@@ -31,7 +31,7 @@ public class FeedController {
     }
 
     //피드 삭제
-    @PreAuthorize("FeedService.isOwner(authentication,#id)")
+    @PreAuthorize("@feedService.isOwner(authentication,#id)")
     @DeleteMapping("/feeds/{id}")
     public ResponseEntity<String> deleteFeed(@PathVariable Long id) {
         feedService.deleteFeed(id);
@@ -45,10 +45,10 @@ public class FeedController {
     }
 
     //피드수정
-    @PreAuthorize("FeedService.isOwner(authentication,#id)")
+    @PreAuthorize("@feedService.isOwner(authentication,#id)")
     @PatchMapping("/feed/{id}")
     public ResponseEntity<FeedResponseDto> updataFeed(@RequestBody FeedRequestDto feedRequestDto, @PathVariable Long id) {
-        return ResponseEntity.ok().body(feedService.updataFeed(id, feedRequestDto));
+        return ResponseEntity.ok().body(feedService.updateFeed(id, feedRequestDto));
     }
 
 }

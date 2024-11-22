@@ -4,14 +4,15 @@ package com.example.newsfeed.service;
 import com.example.newsfeed.dto.FeedRequestDto;
 import com.example.newsfeed.dto.FeedResponseDto;
 import com.example.newsfeed.entity.Feed;
-import com.example.newsfeed.repository.Feedrepository;
+import com.example.newsfeed.repository.FeedRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.Authentication;
+
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FeedService {
     //private final MemberRepository memberRepository;
-    private final Feedrepository feedRepository;
+    private final FeedRepository feedRepository;
 
 
 
@@ -39,9 +40,6 @@ public class FeedService {
                 .map(FeedResponseDto::toDto)
                 .toList();
     }
-
-
-
 
 
     public FeedResponseDto findById(Long id){
@@ -66,7 +64,7 @@ public class FeedService {
 
 
     @Transactional
-    public FeedResponseDto updataFeed(Long id, FeedRequestDto feedRequestDto){
+    public FeedResponseDto updateFeed(Long id, FeedRequestDto feedRequestDto){
         Feed feed = findFeedById(id);
         feed.update(feedRequestDto.getContent());
         return FeedResponseDto.toDto(feed);
@@ -74,7 +72,7 @@ public class FeedService {
 
     public boolean isOwner(Authentication authentication ,Long id){
         FeedResponseDto feedResponseDto = findById(id);
-        return feedResponseDto.getId().equals(authentication.name());
+        return feedResponseDto.getEmail().equals(authentication.getName());
     }
 
 }
