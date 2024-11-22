@@ -26,13 +26,25 @@ public class UserResponseDto {
        this.modifiedDate = modifiedDate;
        this.resign = resign;
    }
+    public static UserResponseDto toProfileDto(User user){
+       return new UserResponseDto(
+               null,
+               null,
+               user.getNickName(),
+               user.getEmail(),
+               user.getPhone(),
+               null,
+               null,
+               false
+       );
+    }
 
 
     public static UserResponseDto toDto(User user) {
        return new UserResponseDto(
                user.getUserId(),
                user.getEmail(),
-               user.getNickname(),
+               user.getNickName(),
                user.getPassword(),
                user.getPhone(),
                user.getCreatedDate(),
