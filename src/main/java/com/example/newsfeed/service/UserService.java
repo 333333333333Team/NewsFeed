@@ -1,9 +1,7 @@
 package com.example.newsfeed.service;
 
 import com.example.newsfeed.config.PasswordEncoder;
-import com.example.newsfeed.dto.LoginRequestDto;
-import com.example.newsfeed.dto.UserRequestDto;
-import com.example.newsfeed.dto.UserResponseDto;
+import com.example.newsfeed.dto.*;
 import com.example.newsfeed.entity.User;
 import com.example.newsfeed.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -68,6 +66,54 @@ public class UserService {
         if(userRepository.findByEmail(email) != null){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "중복된 이메일입니다.");
         }
+    }
+
+    // 프로필 조회(특정 유저 조회)
+    // 닉네임 , 이메일 , 전화번호만 리턴
+    public UserResponseDto findById(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
+        user.setUserId(null);
+        user.setPassword(null);
+
+        return UserResponseDto.toProfileDto(user);
+    }
+
+    //내 프로필 조회
+    // 모든 정보 리턴
+    public UserResponseDto myProfile(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
+
+        return UserResponseDto.toDto(user);
+    }
+
+    // 프로필 수정
+    public UserResponseDto updateProfile(Long userid, UpdateProfileRequestDto requestDto) {
+        User user = findUserById(userid);
+
+        // 비밀번호 검증
+        if(!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호가 맞지 않습니다.");
+        }
+
+        // 새 비밀번호가 있다면 비밀번호 수정
+        if (requestDto.getNewPassword() != null && !requestDto.getNewPassword().isEmpty()) {
+            if (requestDto.getPassword().equals(requestDto.getNewPassword())) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "새 비밀번호는 현재 비밀번호와 달라야 합니다.");
+            }
+            // 새 비밀번호 암호화
+            String newEncodedPassword = passwordEncoder.encode(requestDto.getNewPassword());
+            user.setPassword(newEncodedPassword);
+
+        }
+        // 프로필 정보 수정
+        user.updateProfile(requestDto.getNickName(), requestDto.getPhone());
+        // 데이터베이스 수정
+        User savedUser = userRepository.save(user);
+
+        return UserResponseDto.toDto(savedUser);
+
     }
 
 }
