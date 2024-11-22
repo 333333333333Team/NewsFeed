@@ -45,7 +45,7 @@ public class UserResponseDto {
                user.getUserId(),
                user.getPassword(),
                user.getEmail(),
-               user.getNickName(),
+               user.getNickname(),
                user.getPhone(),
                user.getCreatedDate(),
                user.getModifiedDate(),
