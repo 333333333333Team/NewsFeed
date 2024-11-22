@@ -1,9 +1,9 @@
 package com.example.newsfeed.service;
 
 import com.example.newsfeed.dto.FriendResponseDto;
-import com.example.newsfeed.entitiy.Friend;
-import com.example.newsfeed.entitiy.RequestStatus;
-import com.example.newsfeed.entitiy.User;
+import com.example.newsfeed.entity.Friend;
+import com.example.newsfeed.entity.RequestStatus;
+import com.example.newsfeed.entity.User;
 import com.example.newsfeed.repository.FriendRepository;
 import com.example.newsfeed.repository.UserRepository;
 import org.springframework.stereotype.Service;

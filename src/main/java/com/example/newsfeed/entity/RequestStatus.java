@@ -1,4 +1,4 @@
-package com.example.newsfeed.entitiy;
+package com.example.newsfeed.entity;
 
 public enum RequestStatus {
     PENDING(0),

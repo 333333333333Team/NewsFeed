@@ -1,6 +1,7 @@
-package com.example.newsfeed.entitiy;
+package com.example.newsfeed.entity;
 
 
+import com.example.newsfeed.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,18 +18,18 @@ public class Friend {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private com.example.newsfeed.entity.User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "target_id", nullable = false)
-    private User target;
+    private com.example.newsfeed.entity.User target;
 
     @Setter
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false)
     private RequestStatus requestStatus;
 
-    public Friend(User user, User target, RequestStatus requestStatus) {
+    public Friend(com.example.newsfeed.entity.User user, User target, RequestStatus requestStatus) {
         this.user = user;
         this.target = target;
         this.requestStatus = requestStatus;

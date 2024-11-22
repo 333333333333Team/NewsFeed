@@ -1,7 +1,7 @@
 package com.example.newsfeed.repository;
 
 
-import com.example.newsfeed.entitiy.Friend;
+import com.example.newsfeed.entity.Friend;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
