@@ -1,4 +1,4 @@
-package com.yjh.newsfeeds.dto;
+package com.newsfeeds.dto;
 
 import lombok.Getter;
 

@@ -1,4 +1,4 @@
-package com.yjh.newsfeeds;
+package com.newsfeeds;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

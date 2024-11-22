@@ -1,6 +1,6 @@
-package com.yjh.newsfeeds.repository;
+package com.newsfeeds.repository;
 
-import com.yjh.newsfeeds.entity.Feed;
+import com.newsfeeds.entity.Feed;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface Feedrepository extends JpaRepository<Feed, Long> {

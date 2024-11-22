@@ -1,4 +1,4 @@
-package com.yjh.newsfeeds;
+package com.newsfeeds;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

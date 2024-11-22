@@ -1,9 +1,9 @@
-package com.yjh.newsfeeds.service;
+package com.newsfeeds.service;
 
 
-import com.yjh.newsfeeds.dto.FeedResponseDto;
-import com.yjh.newsfeeds.entity.Feed;
-import com.yjh.newsfeeds.repository.Feedrepository;
+import com.newsfeeds.dto.FeedResponseDto;
+import com.newsfeeds.entity.Feed;
+import com.newsfeeds.repository.Feedrepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +19,10 @@ public class FeedService {
 
        // Member findMember = memberRepository.findMemberByUsernameOrElseThrow(username);
         Feed feed = new feed(content);
-        feed.setMember(findMember);
+      //  feed.setMember(findMember);
         feedRepository.save(feed);
 
-        return new  FeedResponseDto(feed.getId(), feed.getContent(), feed.getNickname());
+        return new  FeedResponseDto(feed.getId(), feed.getContent(), );
     }
 
     public List<FeedResponseDto> allFeeds(){
@@ -30,6 +30,15 @@ public class FeedService {
                 .stream()
                 .map(FeedResponseDto::toDto)
                 .toList();
+    }
+
+
+    public FeedResponseDto findById(Long id){
+        return FeedResponseDto.toDto(findFeedById(id));
+    }
+
+    private Feed findFeedById(Long id){
+        return feedRepository.
     }
 
 }

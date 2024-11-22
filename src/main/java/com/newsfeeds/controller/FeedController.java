@@ -1,10 +1,9 @@
-package com.yjh.newsfeeds.controller;
+package com.newsfeeds.controller;
 
 
-import com.yjh.newsfeeds.dto.FeedResponseDto;
-import com.yjh.newsfeeds.service.FeedService;
+import com.newsfeeds.dto.FeedResponseDto;
+import com.newsfeeds.service.FeedService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,9 +14,16 @@ import java.util.List;
 public class FeedController {
     private final FeedService feedService;
 
+    //전체 조회
     @GetMapping("/feeds")
     public ResponseEntity<List<FeedResponseDto>> findAll(){
         return ResponseEntity.ok().body(feedService.allFeeds());
+    }
+
+    //단건 조회
+    @GetMapping("/feeds/{id}")
+    public ResponseEntity<FeedResponseDto> findone(@PathVariable Long id){
+        return ResponseEntity.ok().body(feedService.findById(id));
     }
 
 
