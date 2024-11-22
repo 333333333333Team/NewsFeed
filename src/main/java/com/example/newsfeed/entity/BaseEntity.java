@@ -15,10 +15,8 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 
-public abstract class BaseEntity {
+public class BaseEntity {
 
-    @CreatedDate
-    @Column(updatable = false, name = "create_date")
     private LocalDateTime createdDate;
 
     @LastModifiedDate
