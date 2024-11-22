@@ -3,6 +3,7 @@ package com.example.newsfeed.controller;
 
 import com.example.newsfeed.dto.FeedRequestDto;
 import com.example.newsfeed.dto.FeedResponseDto;
+import com.example.newsfeed.dto.PagedFeedResponseDto;
 import com.example.newsfeed.service.FeedService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,9 +20,9 @@ public class FeedController {
 
     //전체 조회
     @GetMapping("/feeds")
-    public ResponseEntity<List<FeedResponseDto>> findAll( @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-
-        return ResponseEntity.ok().body(feedService.getAllFeedsPaginated(page, size));
+    public ResponseEntity<PagedFeedResponseDto> findAll( @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        PagedFeedResponseDto pagedFeedResponseDto = feedService.getAllFeedsPaginated(page, size);
+        return ResponseEntity.ok().body(pagedFeedResponseDto);
     }
 
     //단건 조회

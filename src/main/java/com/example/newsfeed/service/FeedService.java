@@ -3,6 +3,7 @@ package com.example.newsfeed.service;
 
 import com.example.newsfeed.dto.FeedRequestDto;
 import com.example.newsfeed.dto.FeedResponseDto;
+import com.example.newsfeed.dto.PagedFeedResponseDto;
 import com.example.newsfeed.entity.Feed;
 import com.example.newsfeed.repository.FeedRepository;
 import jakarta.transaction.Transactional;
@@ -15,6 +16,7 @@ import org.springframework.security.core.Authentication;
 
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,13 +34,22 @@ public class FeedService {
     }
 
     //페이지 네이션 조회
-    public List<FeedResponseDto> getAllFeedsPaginated(int page,int size){
+    public PagedFeedResponseDto getAllFeedsPaginated(int page,int size){
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createDate").descending());
         Page<Feed> feedPage = feedRepository.findAll(pageRequest);
-        return feedPage.getContent()
+        List<FeedResponseDto>content = feedPage.getContent()
                 .stream()
                 .map(FeedResponseDto::toDto)
-                .toList();
+                .collect(Collectors.toList());
+
+        return new PagedFeedResponseDto(
+                content,
+                feedPage.getNumber(),
+                feedPage.getSize(),
+                feedPage.getTotalElements(),
+                feedPage.getTotalPages(),
+                feedPage.isLast()
+        );
     }
 
 
