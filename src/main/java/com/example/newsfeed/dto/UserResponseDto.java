@@ -43,9 +43,9 @@ public class UserResponseDto {
     public static UserResponseDto toDto(User user) {
        return new UserResponseDto(
                user.getUserId(),
+               user.getPassword(),
                user.getEmail(),
                user.getNickName(),
-               user.getPassword(),
                user.getPhone(),
                user.getCreatedDate(),
                user.getModifiedDate(),
