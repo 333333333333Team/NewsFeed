@@ -35,14 +35,6 @@ public class User {
 
     }
 
-
-    public User(String email, String password, String nickName, String phone) {
-        this.email = email;
-        this.password = password;
-        this.nickName = nickName;
-        this.phone = phone;
-    }
-
     public void updateProfile(String nickName, String phone) {
         this.nickName = nickName;
         this.phone = phone;
@@ -51,4 +43,12 @@ public class User {
     public void updatePassword(String newPassword) {
         this.password = newPassword;
     }
+    public User(String email, String password, String nickname, String phone, boolean resign) {
+        this.email = email;
+        this.password = password;
+        this.nickname = nickname;
+        this.phone = phone;
+        this.resign = resign;
+    }
+
 }
