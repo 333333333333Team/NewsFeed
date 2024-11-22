@@ -47,7 +47,7 @@ public class FeedController {
     //피드수정
 
     @PatchMapping("/feeds/{id}")
-    public ResponseEntity<FeedResponseDto> updataFeed(@RequestBody FeedRequestDto feedRequestDto, @PathVariable Long id) {
+    public ResponseEntity<FeedResponseDto> updateFeed(@RequestBody FeedRequestDto feedRequestDto, @PathVariable Long id) {
         return ResponseEntity.ok().body(feedService.updateFeed(id, feedRequestDto));
     }
 
