@@ -20,10 +20,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class FeedService {
-    //private final MemberRepository memberRepository;
     private final FeedRepository feedRepository;
-
-
 
     public List<FeedResponseDto> allFeeds(){
         return feedRepository.findAll()
@@ -68,7 +65,7 @@ public class FeedService {
 
     @Transactional
     public FeedResponseDto createFeed(FeedRequestDto feedRequestDto){
-        Feed feed = new Feed(feedRequestDto.getNickname(),feedRequestDto.getContent(),feedRequestDto.getPhone(),feedRequestDto.getEmail());
+        Feed feed = new Feed(feedRequestDto.getNickName(),feedRequestDto.getContent(),feedRequestDto.getPhone(),feedRequestDto.getEmail());
         Feed saveFeed = feedRepository.save(feed);
         return FeedResponseDto.toDto(saveFeed);
     }

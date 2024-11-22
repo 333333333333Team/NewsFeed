@@ -6,14 +6,14 @@ import lombok.Getter;
 public class FeedRequestDto {
 
     private final String email;
-    private final String nickname;
+    private final String nickName;
     private final String content;
     private final String phone;
 
-    public FeedRequestDto(String email, String nickname, String content, String phone){
+    public FeedRequestDto(String email, String nickName, String content, String phone){
 
         this.email =email;
-        this.nickname =nickname;
+        this.nickName =nickName;
         this.content = content;
         this.phone = phone;
     }

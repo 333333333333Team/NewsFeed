@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.math.BigInteger;
-
 @Getter
 @Entity
 @Setter
@@ -15,7 +13,7 @@ public class Feed extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String email;
-    private String nickname;
+    private String nickName;
     private String phone;
     private String content;
 
@@ -28,11 +26,11 @@ public class Feed extends BaseEntity {
 
     public Feed(){}
 
-    public Feed(String email, String nickname,String phone, String content){
+    public Feed(String email, String nickName,String phone, String content){
 
         this.content = content;
         this.email = email;
-        this.nickname = nickname;
+        this.nickName = nickName;
         this.phone = phone;
     }
 
