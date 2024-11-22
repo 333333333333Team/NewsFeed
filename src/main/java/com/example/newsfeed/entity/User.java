@@ -10,11 +10,11 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 @Entity
 @Table(name = "user")
 @EnableJpaAuditing
-public class User {
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userid;
+    private Long userId;
 
     @Column(nullable = false, length = 45)
     private String email;
@@ -40,13 +40,10 @@ public class User {
         this.phone = phone;
     }
 
-    public void updatePassword(String newPassword) {
-        this.password = newPassword;
-    }
-    public User(String email, String password, String nickname, String phone, boolean resign) {
+    public User(String email, String password, String nickName, String phone, boolean resign) {
         this.email = email;
         this.password = password;
-        this.nickname = nickname;
+        this.nickName = nickName;
         this.phone = phone;
         this.resign = resign;
     }
