@@ -10,17 +10,17 @@ public class UserResponseDto {
    private final Long userId;
    private final String email;
    private final String password;
-   private final String nickname;
+   private final String nickName;
    private final String phone;
    private final LocalDateTime createdDate;
    private final LocalDateTime modifiedDate;
    private final boolean resign;
 
-   public UserResponseDto(Long userId,String password, String email, String nickname, String phone, LocalDateTime createdDate, LocalDateTime modifiedDate, boolean resign) {
+   public UserResponseDto(Long userId,String password, String email, String nickName, String phone, LocalDateTime createdDate, LocalDateTime modifiedDate, boolean resign) {
        this.userId = userId;
        this.password = password;
        this.email = email;
-       this.nickname = nickname;
+       this.nickName = nickName;
        this.phone = phone;
        this.createdDate = createdDate;
        this.modifiedDate = modifiedDate;
@@ -45,7 +45,7 @@ public class UserResponseDto {
                user.getUserId(),
                user.getPassword(),
                user.getEmail(),
-               user.getNickname(),
+               user.getNickName(),
                user.getPhone(),
                user.getCreatedDate(),
                user.getModifiedDate(),
