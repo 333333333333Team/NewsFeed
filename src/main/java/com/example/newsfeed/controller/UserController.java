@@ -1,8 +1,6 @@
 package com.example.newsfeed.controller;
 
-import com.example.newsfeed.dto.LoginRequestDto;
-import com.example.newsfeed.dto.UserRequestDto;
-import com.example.newsfeed.dto.UserResponseDto;
+import com.example.newsfeed.dto.*;
 import com.example.newsfeed.entity.User;
 import com.example.newsfeed.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,17 +17,20 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
 
+    // 회원가입
     @PostMapping
     public ResponseEntity<UserResponseDto> createUser(@Valid @RequestBody UserRequestDto userRequestDto ){
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(userRequestDto));
     }
 
+    // 회원탈퇴
     @PutMapping("/{userId}")
     public ResponseEntity<String> deleteUser(@PathVariable Long userId, @RequestBody UserRequestDto userRequestDto) {
         userService.resignUser(userId, userRequestDto);
         return ResponseEntity.ok().body("정상적으로 회원탈퇴되었습니다.");
     }
 
+    // 로그인
     @PostMapping("/login")
     public ResponseEntity<String> loginUser(@Valid @RequestBody LoginRequestDto loginRequestDto, HttpServletRequest request) {
         User loginedUser = userService.loginUser(loginRequestDto);
@@ -39,6 +40,7 @@ public class UserController {
         return ResponseEntity.ok().body("정상적으로 로그인되었습니다.");
     }
 
+    // 로그아웃
     @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
@@ -47,5 +49,36 @@ public class UserController {
         }
         return ResponseEntity.ok("로그아웃 성공");
     }
+
+    // 프로필 상세 조회
+    @GetMapping("/profile/{userId}")
+    public ResponseEntity<UserResponseDto> viewProfile(@PathVariable Long userId, HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        // 찾으려는 프로필이 로그인중인 아이디의 프로필일때
+        if (session != null) {
+            Long loginId = (Long) session.getAttribute("SESSION_KEY");
+            System.out.println(loginId);
+            System.out.println(loginId);
+            if(userId.equals(loginId)) {
+                // 내 프로필 조회 ( 모든정보 )
+                UserResponseDto userResponseDto = userService.myProfile(loginId);
+                return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
+            }
+        }
+        //다른 사람의 프로필 조회 (닉네임, 이메일 , 전화번호만 출력)
+        UserResponseDto userResponseDto = userService.findById(userId);
+        return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
+
+    }
+
+    // 프로필 수정
+    @PutMapping("/profile/update")
+    public ResponseEntity<UserResponseDto> updateProfile(HttpServletRequest request,@RequestBody UpdateProfileRequestDto requestDto) {
+        HttpSession session = request.getSession(false);
+        Long loginId = (Long) session.getAttribute("SESSION_KEY");
+
+        return ResponseEntity.status(HttpStatus.OK).body(userService.updateProfile(loginId, requestDto));
+    }
+
 
 }
