@@ -24,6 +24,11 @@ repositories {
 }
 
 dependencies {
+
+//    DB 연결용
+    implementation 'mysql:mysql-connector-java:8.0.28'
+   
+//    스프링용
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.projectlombok:lombok'
