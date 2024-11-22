@@ -12,7 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.security.core.Authentication;
 
 
 import java.util.List;
@@ -35,7 +34,7 @@ public class FeedService {
 
     //페이지 네이션 조회
     public PagedFeedResponseDto getAllFeedsPaginated(int page,int size){
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createDate").descending());
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdDate").descending());
         Page<Feed> feedPage = feedRepository.findAll(pageRequest);
 
         List<FeedResponseDto>content = feedPage.getContent()
@@ -82,9 +81,5 @@ public class FeedService {
         return FeedResponseDto.toDto(feed);
     }
 
-    public boolean isOwner(Authentication authentication ,Long id){
-        FeedResponseDto feedResponseDto = findById(id);
-        return feedResponseDto.getEmail().equals(authentication.getName());
-    }
 
 }
