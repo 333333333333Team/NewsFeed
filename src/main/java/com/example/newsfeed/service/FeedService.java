@@ -7,6 +7,10 @@ import com.example.newsfeed.entity.Feed;
 import com.example.newsfeed.repository.Feedrepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,12 +22,26 @@ public class FeedService {
     private final Feedrepository feedRepository;
 
 
+
     public List<FeedResponseDto> allFeeds(){
         return feedRepository.findAll()
                 .stream()
                 .map(FeedResponseDto::toDto)
                 .toList();
     }
+
+    //페이지 네이션 조회
+    public List<FeedResponseDto> getAllFeedsPaginated(int page,int size){
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createDate").descending());
+        Page<Feed> feedPage = feedRepository.findAll(pageRequest);
+        return feedPage.getContent()
+                .stream()
+                .map(FeedResponseDto::toDto)
+                .toList();
+    }
+
+
+
 
 
     public FeedResponseDto findById(Long id){
@@ -54,5 +72,9 @@ public class FeedService {
         return FeedResponseDto.toDto(feed);
     }
 
+    public boolean isOwner(Authentication authentication ,Long id){
+        FeedResponseDto feedResponseDto = findById(id);
+        return feedResponseDto.getId().equals(authentication.name());
+    }
 
 }
