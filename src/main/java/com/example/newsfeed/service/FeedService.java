@@ -1,9 +1,9 @@
-package com.newsfeeds.service;
+package com.example.newsfeed.service;
 
 
-import com.newsfeeds.dto.FeedResponseDto;
-import com.newsfeeds.entity.Feed;
-import com.newsfeeds.repository.Feedrepository;
+import com.example.newsfeed.dto.FeedResponseDto;
+import com.example.newsfeed.entity.Feed;
+import com.example.newsfeed.repository.Feedrepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

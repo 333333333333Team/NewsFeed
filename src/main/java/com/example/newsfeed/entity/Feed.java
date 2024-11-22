@@ -1,4 +1,4 @@
-package com.newsfeeds.entity;
+package com.example.newsfeed.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

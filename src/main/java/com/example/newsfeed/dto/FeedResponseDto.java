@@ -1,6 +1,6 @@
-package com.newsfeeds.dto;
+package com.example.newsfeed.dto;
 
-import com.newsfeeds.entity.Feed;
+import com.example.newsfeed.entity.Feed;
 import lombok.Getter;
 
 import java.math.BigInteger;

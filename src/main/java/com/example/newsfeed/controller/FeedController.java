@@ -1,8 +1,8 @@
-package com.newsfeeds.controller;
+package com.example.newsfeed.controller;
 
 
-import com.newsfeeds.dto.FeedResponseDto;
-import com.newsfeeds.service.FeedService;
+import com.example.newsfeed.dto.FeedResponseDto;
+import com.example.newsfeed.service.FeedService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
