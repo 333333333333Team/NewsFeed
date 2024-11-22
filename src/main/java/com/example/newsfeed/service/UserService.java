@@ -19,13 +19,12 @@ public class UserService {
     // 회원가입
     @Transactional
     public UserResponseDto createUser(UserRequestDto userRequestDto) {
-
-        findUserByEmail(userRequestDto.getEmail());                                                     //이메일 중복검사
-        String encodedPassword = passwordEncoder.encode(userRequestDto.getPassword());                  //비밀번호 암호회
-        //System.out.println(passwordEncoder.matches(userRequestDto.getPassword(), encodedPassword));
+        //이메일 중복검사
+        findUserByEmail(userRequestDto.getEmail());
+        //비밀번호 암호회
+        String encodedPassword = passwordEncoder.encode(userRequestDto.getPassword());
         User user = userRequestDto.toEntity();
         user.setPassword(encodedPassword);
-
         User savedUser = userRepository.save(user);
         return UserResponseDto.toDto(savedUser);
     }
@@ -33,7 +32,6 @@ public class UserService {
     //회원탈퇴
     @Transactional
     public void resignUser(Long userId, UserRequestDto userRequestDto) {
-
         User user = findUserById(userId);
         String password = userRequestDto.getPassword();
         if(user.isResign()){
@@ -52,11 +50,13 @@ public class UserService {
         User user = userRepository.findByEmail(loginRequestDto.getEmail());
         if (user == null || !passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 사용자 이름 혹은 잘못된 비밀번호");
+        } else if(user.isResign()){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "탈퇴한 회원입니다.");
         }
         return user;
     }
 
-    //
+    //아이디로 유저찾기
     public User findUserById(Long userId) {
         return userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
     }
@@ -91,12 +91,10 @@ public class UserService {
     // 프로필 수정
     public UserResponseDto updateProfile(Long userid, UpdateProfileRequestDto requestDto) {
         User user = findUserById(userid);
-
         // 비밀번호 검증
         if(!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())){
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호가 맞지 않습니다.");
         }
-
         // 새 비밀번호가 있다면 비밀번호 수정
         if (requestDto.getNewPassword() != null && !requestDto.getNewPassword().isEmpty()) {
             if (requestDto.getPassword().equals(requestDto.getNewPassword())) {
@@ -105,7 +103,6 @@ public class UserService {
             // 새 비밀번호 암호화
             String newEncodedPassword = passwordEncoder.encode(requestDto.getNewPassword());
             user.setPassword(newEncodedPassword);
-
         }
         // 프로필 정보 수정
         user.updateProfile(requestDto.getNickName(), requestDto.getPhone());
