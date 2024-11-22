@@ -86,5 +86,10 @@ public class FeedService {
         return FeedResponseDto.toDto(feed);
     }
 
+    public boolean isOwner(String email, Long id) {
+        FeedResponseDto feedResponseDto = findById(id);
+        return feedResponseDto.getEmail().equals(email);
+    }
+
 
 }
