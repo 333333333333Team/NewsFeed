@@ -20,7 +20,7 @@ public class Feed extends BaseEntity {
 
     public Feed(){}
 
-    public Feed( Long userId,String email, String nickName,String phone, String content){
+    public Feed( Long userId,String content, String email, String nickName,String phone ){
 
         this.userId=userId;
         this.content = content;

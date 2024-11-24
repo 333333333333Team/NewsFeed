@@ -6,7 +6,6 @@ import com.example.newsfeed.dto.FeedResponseDto;
 import com.example.newsfeed.dto.FriendResponseDto;
 import com.example.newsfeed.dto.PagedFeedResponseDto;
 import com.example.newsfeed.entity.Feed;
-import com.example.newsfeed.entity.Friend;
 import com.example.newsfeed.entity.User;
 import com.example.newsfeed.repository.FeedRepository;
 import jakarta.transaction.Transactional;
@@ -78,7 +77,8 @@ public class FeedService {
     @Transactional
     public FeedResponseDto createFeed(Long userId, FeedRequestDto feedRequestDto){
         User user = userService.findUserById(userId);
-        Feed feed = new Feed(userId,feedRequestDto.getContent(),user.getEmail(),user.getNickName(),user.getPhone());
+        String content = feedRequestDto.getContent();
+        Feed feed = new Feed(userId, content, user.getEmail(), user.getNickName(), user.getPhone());
         Feed saveFeed = feedRepository.save(feed);
         return FeedResponseDto.toDto(saveFeed);
     }

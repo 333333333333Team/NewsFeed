@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user/feeds")
+@RequestMapping("/feeds")
 public class FeedController {
     private final FeedService feedService;
 
@@ -44,7 +44,7 @@ public class FeedController {
 
     //피드 등록
     @PostMapping
-    public ResponseEntity<FeedResponseDto> createFeed(@RequestBody FeedRequestDto feedRequestDto, HttpServletRequest request) {
+    public ResponseEntity<FeedResponseDto> createFeed( HttpServletRequest request, @RequestBody FeedRequestDto feedRequestDto) {
         HttpSession session = request.getSession(false);
         Long userId = (Long) session.getAttribute("SESSION_KEY");
         return ResponseEntity.status(HttpStatus.CREATED).body(feedService.createFeed(userId, feedRequestDto));
