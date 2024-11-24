@@ -9,17 +9,19 @@ public class FeedResponseDto {
     private final String email;
     private final String content;
     private final String nickName;
+    private final Long userId;
 
-    public FeedResponseDto(Long id, String content, String nickName, String email) {
+    public FeedResponseDto(Long id, String content, String nickName, String email, Long userId) {
         this.id = id;
         this.content = content;
         this.nickName = nickName;
         this.email = email;
+        this.userId = userId;
     }
 
 
     public static FeedResponseDto toDto(Feed feed){
-        return new FeedResponseDto(feed.getId(), feed.getContent(), feed.getNickName(), feed.getEmail());
+        return new FeedResponseDto(feed.getId(), feed.getContent(), feed.getNickName(), feed.getEmail(), feed.getUserId());
     }
 
 
