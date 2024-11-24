@@ -67,6 +67,7 @@ public class UserController {
         if(userId.equals(loginId)) {
             // 내 프로필 조회 ( 모든정보 )
             UserResponseDto userResponseDto = userService.myProfile(loginId);
+            // 나와 내 친구들의 피드들을 조회
             List<FeedResponseDto> feedResponseDto = feedService.meAndFriends(userId);;
             profile.put("user", userResponseDto);
             profile.put("feed", feedResponseDto);
@@ -74,6 +75,7 @@ public class UserController {
         }
         //다른 사람의 프로필 조회 (닉네임, 이메일 , 전화번호만 출력)
         UserResponseDto userResponseDto = userService.viewProfile(userId);
+        // 다른 사람의 피드만 조회
         List<FeedResponseDto> feedResponseDto = feedService.userFeeds(userId);
         profile.put("user", userResponseDto);
         profile.put("feeds", feedResponseDto);
