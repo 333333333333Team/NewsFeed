@@ -1,9 +1,7 @@
 package com.example.newsfeed.service;
 
 import com.example.newsfeed.config.PasswordEncoder;
-import com.example.newsfeed.dto.LoginRequestDto;
-import com.example.newsfeed.dto.UserRequestDto;
-import com.example.newsfeed.dto.UserResponseDto;
+import com.example.newsfeed.dto.*;
 import com.example.newsfeed.entity.User;
 import com.example.newsfeed.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,13 +19,12 @@ public class UserService {
     // 회원가입
     @Transactional
     public UserResponseDto createUser(UserRequestDto userRequestDto) {
-
-        findUserByEmail(userRequestDto.getEmail());                                                     //이메일 중복검사
-        String encodedPassword = passwordEncoder.encode(userRequestDto.getPassword());                  //비밀번호 암호회
-        //System.out.println(passwordEncoder.matches(userRequestDto.getPassword(), encodedPassword));
+        //이메일 중복검사
+        findUserByEmail(userRequestDto.getEmail());
+        //비밀번호 암호회
+        String encodedPassword = passwordEncoder.encode(userRequestDto.getPassword());
         User user = userRequestDto.toEntity();
         user.setPassword(encodedPassword);
-
         User savedUser = userRepository.save(user);
         return UserResponseDto.toDto(savedUser);
     }
@@ -35,7 +32,6 @@ public class UserService {
     //회원탈퇴
     @Transactional
     public void resignUser(Long userId, UserRequestDto userRequestDto) {
-
         User user = findUserById(userId);
         String password = userRequestDto.getPassword();
         if(user.isResign()){
@@ -51,23 +47,70 @@ public class UserService {
 
     //로그인
     public User loginUser(LoginRequestDto loginRequestDto) {
-        User user = userRepository.findByEmail(loginRequestDto.getEmail());
+        User user = userRepository.findByEmail(loginRequestDto.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
         if (user == null || !passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 사용자 이름 혹은 잘못된 비밀번호");
+        } else if(user.isResign()){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "탈퇴한 회원입니다.");
         }
         return user;
     }
 
-    //
+    //아이디로 유저찾기
     public User findUserById(Long userId) {
         return userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
     }
 
     // 이메일 중복검사메서드
     public void findUserByEmail(String email) {
-        if(userRepository.findByEmail(email) != null){
+        if(userRepository.findByEmail(email).isPresent()){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "중복된 이메일입니다.");
         }
+    }
+
+    // 프로필 조회(다른 유저 조회)
+    // 닉네임 , 이메일 , 전화번호만 리턴
+    public UserResponseDto viewProfile(Long userId) {
+        User user = userRepository.findNickNameAndEmailAndPhoneByUserId(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
+
+        return UserResponseDto.toDto(user);
+    }
+
+    //내 프로필 조회
+    // 모든 정보 리턴
+    public UserResponseDto myProfile(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
+
+        return UserResponseDto.toDto(user);
+    }
+
+    // 프로필 수정
+    public UserResponseDto updateProfile(Long userid, UpdateProfileRequestDto requestDto) {
+        User user = findUserById(userid);
+        // 비밀번호 검증
+        if(!passwordEncoder.matches(requestDto.getPassword(), user.getPassword())){
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호가 맞지 않습니다.");
+        }
+        // 새 비밀번호가 있다면 비밀번호 수정
+        if (requestDto.getNewPassword() != null && !requestDto.getNewPassword().isEmpty()) {
+            if (requestDto.getPassword().equals(requestDto.getNewPassword())) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "새 비밀번호는 현재 비밀번호와 달라야 합니다.");
+            }
+            // 새 비밀번호 암호화
+            String newEncodedPassword = passwordEncoder.encode(requestDto.getNewPassword());
+            user.setPassword(newEncodedPassword);
+        }
+        // 프로필 정보 수정
+        user.setNickName(requestDto.getNickName());
+        user.setPhone(requestDto.getPhone());
+        // 데이터베이스 수정
+        User savedUser = userRepository.save(user);
+
+        return UserResponseDto.toDto(savedUser);
+
     }
 
 }

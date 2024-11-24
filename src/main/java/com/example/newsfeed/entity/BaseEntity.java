@@ -1,5 +1,6 @@
 package com.example.newsfeed.entity;
 
+
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
+
 public class BaseEntity {
 
     @CreatedDate
@@ -19,4 +21,5 @@ public class BaseEntity {
 
     @LastModifiedDate
     private LocalDateTime modifiedDate;
+
 }
