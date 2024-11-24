@@ -14,10 +14,10 @@ public class UpdateProfileRequestDto {
 
     private final String newPassword;
 
-    public UpdateProfileRequestDto(String nickName, String phone, String password, String newPassword) {
+    public UpdateProfileRequestDto(String nickName, String password,  String newPassword, String phone) {
         this.nickName = nickName;
-        this.phone = phone;
         this.password = password;
         this.newPassword = newPassword;
+        this.phone = phone;
     }
 }

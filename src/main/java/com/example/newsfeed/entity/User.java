@@ -34,12 +34,6 @@ public class User extends BaseEntity {
     public User(){
 
     }
-
-    public void updateProfile(String nickName, String phone) {
-        this.nickName = nickName;
-        this.phone = phone;
-    }
-
     public User(String email, String password, String nickName, String phone, boolean resign) {
         this.email = email;
         this.password = password;
