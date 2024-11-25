@@ -75,4 +75,5 @@ public class FriendService {
         return new FriendResponseDto(friend.getFriendId(), friend.getUser().getUserId(),
                 friend.getTarget().getUserId(), friend.getRequestStatus().name());
     }
+
 }

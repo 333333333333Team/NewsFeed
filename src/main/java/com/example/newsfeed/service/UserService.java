@@ -47,7 +47,8 @@ public class UserService {
 
     //로그인
     public User loginUser(LoginRequestDto loginRequestDto) {
-        User user = userRepository.findByEmail(loginRequestDto.getEmail());
+        User user = userRepository.findByEmail(loginRequestDto.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
         if (user == null || !passwordEncoder.matches(loginRequestDto.getPassword(), user.getPassword())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 사용자 이름 혹은 잘못된 비밀번호");
         } else if(user.isResign()){
@@ -63,20 +64,18 @@ public class UserService {
 
     // 이메일 중복검사메서드
     public void findUserByEmail(String email) {
-        if(userRepository.findByEmail(email) != null){
+        if(userRepository.findByEmail(email).isPresent()){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "중복된 이메일입니다.");
         }
     }
 
-    // 프로필 조회(특정 유저 조회)
+    // 프로필 조회(다른 유저 조회)
     // 닉네임 , 이메일 , 전화번호만 리턴
-    public UserResponseDto findById(Long userId) {
-        User user = userRepository.findById(userId)
+    public UserResponseDto viewProfile(Long userId) {
+        User user = userRepository.findNickNameAndEmailAndPhoneByUserId(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."));
-        user.setUserId(null);
-        user.setPassword(null);
 
-        return UserResponseDto.toProfileDto(user);
+        return UserResponseDto.toDto(user);
     }
 
     //내 프로필 조회
@@ -105,7 +104,8 @@ public class UserService {
             user.setPassword(newEncodedPassword);
         }
         // 프로필 정보 수정
-        user.updateProfile(requestDto.getNickName(), requestDto.getPhone());
+        user.setNickName(requestDto.getNickName());
+        user.setPhone(requestDto.getPhone());
         // 데이터베이스 수정
         User savedUser = userRepository.save(user);
 

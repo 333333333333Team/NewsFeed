@@ -1,21 +1,19 @@
 package com.example.newsfeed.dto;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 @Getter
 public class FeedRequestDto {
 
-    private final String email;
-    private final String nickname;
     private final String content;
-    private final String phone;
 
-    public FeedRequestDto(String email, String nickname, String content, String phone){
+    @JsonCreator
+    public FeedRequestDto(@JsonProperty("content")String content){
 
-        this.email =email;
-        this.nickname =nickname;
         this.content = content;
-        this.phone = phone;
+
     }
 
 }

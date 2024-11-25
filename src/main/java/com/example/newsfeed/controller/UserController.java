@@ -2,6 +2,7 @@ package com.example.newsfeed.controller;
 
 import com.example.newsfeed.dto.*;
 import com.example.newsfeed.entity.User;
+import com.example.newsfeed.service.FeedService;
 import com.example.newsfeed.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -11,11 +12,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
+    private final FeedService feedService;
 
     // 회원가입
     @PostMapping
@@ -53,18 +59,27 @@ public class UserController {
 
     // 프로필 상세 조회
     @GetMapping("/profile/{userId}")
-    public ResponseEntity<UserResponseDto> viewProfile(@PathVariable Long userId, HttpServletRequest request) {
+    public ResponseEntity<Map<String, Object>> viewProfile(@PathVariable Long userId, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
+        Map<String, Object> profile = new HashMap<>();
         // 찾으려는 프로필이 로그인중인 아이디의 프로필일때
         Long loginId = (Long) session.getAttribute("SESSION_KEY");
         if(userId.equals(loginId)) {
             // 내 프로필 조회 ( 모든정보 )
             UserResponseDto userResponseDto = userService.myProfile(loginId);
-            return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
+            // 나와 내 친구들의 피드들을 조회
+            List<FeedResponseDto> feedResponseDto = feedService.meAndFriends(userId);;
+            profile.put("user", userResponseDto);
+            profile.put("feed", feedResponseDto);
+            return new ResponseEntity<>(profile, HttpStatus.OK);
         }
         //다른 사람의 프로필 조회 (닉네임, 이메일 , 전화번호만 출력)
-        UserResponseDto userResponseDto = userService.findById(userId);
-        return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
+        UserResponseDto userResponseDto = userService.viewProfile(userId);
+        // 다른 사람의 피드만 조회
+        List<FeedResponseDto> feedResponseDto = feedService.userFeeds(userId);
+        profile.put("user", userResponseDto);
+        profile.put("feeds", feedResponseDto);
+        return new ResponseEntity<>(profile, HttpStatus.OK);
     }
 
     // 프로필 수정
