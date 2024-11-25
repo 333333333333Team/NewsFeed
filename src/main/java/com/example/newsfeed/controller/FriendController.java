@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import jakarta.servlet.http.HttpSession;
 
 import java.util.List;
 
@@ -22,7 +21,7 @@ public class FriendController {
         this.friendService = friendService;
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping
     public ResponseEntity<List<FriendResponseDto>> getFriendList(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         Long userId = (Long) session.getAttribute("SESSION_KEY");
@@ -30,63 +29,69 @@ public class FriendController {
         return new ResponseEntity<>(friends, HttpStatus.OK);
     }
 
-    @PostMapping("/{userId}")
-    public ResponseEntity<Void> addFriendRequest(HttpServletRequest request, @RequestBody FriendRequestDto friendRequestDTO) {
+    @PostMapping
+    public ResponseEntity<String> addFriendRequest(HttpServletRequest request, @RequestBody FriendRequestDto friendRequestDTO) {
         HttpSession session = request.getSession(false);
         Long userId = (Long) session.getAttribute("SESSION_KEY");
         try {
             friendService.addFriendRequest(userId, friendRequestDTO.getTargetId());
-            return new ResponseEntity<>(HttpStatus.OK);
+            return ResponseEntity.ok("친구 요청이 성공적으로 전송되었습니다.");
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body("유효하지 않은 사용자입니다.");
         }
     }
 
-    @DeleteMapping("/{userId}/{targetId}")
-    public ResponseEntity<Void> deleteFriend(HttpServletRequest request, @PathVariable Long targetId) {
+    @DeleteMapping("/{targetId}")
+    public ResponseEntity<String> deleteFriend(HttpServletRequest request, @PathVariable Long targetId) {
         HttpSession session = request.getSession(false);
         Long userId = (Long) session.getAttribute("SESSION_KEY");
         try {
             friendService.deleteFriend(userId, targetId);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.ok("친구가 성공적으로 삭제되었습니다.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("친구를 찾을 수 없습니다.");
         }
     }
 
-    @GetMapping("/{userId}/{targetId}")
-    public ResponseEntity<FriendResponseDto> findFriend(HttpServletRequest request, @PathVariable Long targetId) {
+    @GetMapping("/{targetId}")
+    public ResponseEntity<?> findFriend(HttpServletRequest request, @PathVariable Long targetId) {
         HttpSession session = request.getSession(false);
         Long userId = (Long) session.getAttribute("SESSION_KEY");
         try {
             FriendResponseDto friend = friendService.findFriend(userId, targetId);
-            return new ResponseEntity<>(friend, HttpStatus.OK);
+            return ResponseEntity.ok(friend);
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body("친구를 찾을 수 없습니다.");
         }
     }
 
     @PatchMapping("/{userId}/{targetId}")
-    public ResponseEntity<Void> acceptFriendRequest(HttpServletRequest request, @PathVariable Long targetId) {
+    public ResponseEntity<String> acceptFriendRequest(HttpServletRequest request, @PathVariable Long userId, @PathVariable Long targetId) {
         HttpSession session = request.getSession(false);
-        Long userId = (Long) session.getAttribute("SESSION_KEY");
+        Long sessionUserId = (Long) session.getAttribute("SESSION_KEY");
+        if (!sessionUserId.equals(targetId)) {
+            return ResponseEntity.badRequest().body("로그인된 사용자와 대상 ID가 일치하지 않습니다.");
+        }
         try {
             friendService.acceptFriendRequest(userId, targetId);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return ResponseEntity.ok("친구 요청이 수락되었습니다.");
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body("유효하지 않은 요청 상태입니다.");
         }
     }
 
     @DeleteMapping("/{userId}/{targetId}/reject")
-    public ResponseEntity<Void> rejectFriendRequest(HttpServletRequest request, @PathVariable Long targetId) {
+    public ResponseEntity<String> rejectFriendRequest(HttpServletRequest request, @PathVariable Long userId, @PathVariable Long targetId) {
         HttpSession session = request.getSession(false);
-        Long userId = (Long) session.getAttribute("SESSION_KEY");
+        Long sessionUserId = (Long) session.getAttribute("SESSION_KEY");
+        if (!sessionUserId.equals(targetId)) {
+            return ResponseEntity.badRequest().body("로그인된 사용자와 대상 ID가 일치하지 않습니다.");
+        }
         try {
             friendService.rejectFriendRequest(userId, targetId);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return ResponseEntity.ok("친구 요청이 거절되었습니다.");
         } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body("유효하지 않은 요청 상태입니다.");
         }
     }
 }

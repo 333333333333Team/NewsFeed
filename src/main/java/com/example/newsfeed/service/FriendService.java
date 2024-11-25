@@ -41,7 +41,13 @@ public class FriendService {
     }
 
     public void deleteFriend(Long userId, Long targetId) {
-        friendRepository.deleteByUserUserIdAndTargetUserId(userId, targetId);
+        Optional<Friend> friend = friendRepository.findByUserUserIdAndTargetUserId(userId, targetId);
+        if (friend.isPresent()) {
+            friendRepository.delete(friend.get());
+            System.out.println("친구가 성공적으로 삭제되었습니다.");
+        } else {
+            throw new IllegalArgumentException("Friend not found");
+        }
     }
 
     public FriendResponseDto findFriend(Long userId, Long targetId) {
@@ -57,9 +63,10 @@ public class FriendService {
             friend.setRequestStatus(RequestStatus.ACCEPTED);
             friendRepository.save(friend);
         } else {
-            throw new IllegalArgumentException("Invalid request status");
+            throw new IllegalArgumentException("Request status is not pending");
         }
     }
+
 
     public void rejectFriendRequest(Long userId, Long targetId) {
         Friend friend = friendRepository.findByUserUserIdAndTargetUserId(userId, targetId)
@@ -67,9 +74,10 @@ public class FriendService {
         if (friend.getRequestStatus() == RequestStatus.PENDING) {
             friendRepository.delete(friend);
         } else {
-            throw new IllegalArgumentException("Invalid request status");
+            throw new IllegalArgumentException("Request status is not pending");
         }
     }
+
 
     private FriendResponseDto convertToResponseDTO(Friend friend) {
         return new FriendResponseDto(friend.getFriendId(), friend.getUser().getUserId(),
